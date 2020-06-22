@@ -1,9 +1,9 @@
 const template = `
-    <div>Mazejs</div>
+  <div>Mazejs</div>
 `;
 
 export default {
-    name: "App",
+  name: "App",
 
-    template
+  template
 }
