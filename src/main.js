@@ -6,6 +6,7 @@ import "@/assets/css/app.css";
 
 Vue.config.productionTip = false;
 
+Vue.prototype.bus = new Vue();
 Vue.prototype.moment = moment;
 
 new Vue({
