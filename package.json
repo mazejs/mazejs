@@ -1,0 +1,32 @@
+{
+  "name": "mazejs",
+  "version": "0.1.0",
+  "description": "A wrapper of vue components and tailwindcss",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "build:css": "npx tailwindcss build src/assets/css/app.css -o public/css/app.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mazejs/mazejs.git"
+  },
+  "author": "mariobrino@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mazejs/mazejs/issues"
+  },
+  "homepage": "https://github.com/mazejs/mazejs#readme",
+  "devDependencies": {
+    "@vue/cli-service": "^4.4.5",
+    "html-loader": "^1.1.0",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "dependencies": {
+    "moment": "^2.27.0",
+    "tailwindcss": "^1.4.6",
+    "vue": "^2.6.11"
+  }
+}
