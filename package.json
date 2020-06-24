@@ -1,9 +1,9 @@
 {
-  "name": "mazejs",
+  "name": "@mazejs/mazejs",
   "version": "0.1.0",
   "description": "A wrapper of vue components and tailwindcss",
   "main": "src/index.js",
-  "private": true,
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build:css": "npx tailwindcss build src/assets/css/app.css -o public/css/app.css"
