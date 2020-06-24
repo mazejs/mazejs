@@ -1,19 +1,13 @@
-import Breadcrumb from "./components/breadcrumb";
-import Datagrid from "./components/datagrid";
-import Dropdown from "./components/dropdown";
-import Modal from "./components/modal";
-import Notice from "./components/notice";
-import Notification from "./components/notification";
-import Notify from "./components/notify";
-import Sidebar from "./components/sidebar";
 
-export {
-  Breadcrumb,
-  Datagrid,
-  Dropdown,
-  Modal,
-  Notice,
-  Notification,
-  Notify,
-  Sidebar
+export default {
+  install(Vue, options) {
+    Vue.component("breadcrumb", require("./components/breadcrumb").default);
+    Vue.component("datagrid", require("./components/datagrid").default);
+    Vue.component("dropdown", require("./components/dropdown").default);
+    Vue.component("modal", require("./components/modal").default);
+    Vue.component("notice", require("./components/notice").default);
+    Vue.component("notification", require("./components/notification").default);
+    Vue.component("notify", require("./components/notify").default);
+    Vue.component("sidebar", require("./components/sidebar").default);
+  }
 };
