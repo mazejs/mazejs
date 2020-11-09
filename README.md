@@ -13,6 +13,9 @@ A wrapper of vuejs components and tailwindcss
 * pagination
 * sidebar
 
+## Example
+[Laravel](https://github.com/mazejs/example)
+
 ## Wiki
 
 [Datagrid](https://github.com/mazejs/mazejs/wiki/Datagrid)
