@@ -2,6 +2,12 @@
 
 A wrapper of vuejs components and tailwindcss
 
+## How to install
+
+```bash
+npm i @mazejs/mazejs
+```
+
 ## Components
 
 * breadcrumb
