@@ -1,4 +1,30 @@
-const template = `
+<script lang="ts">
+export default {
+  props: ["columns", "order", "item"],
+
+  methods: {
+    orderBy(column: any) {
+      this.$emit("action", {
+        event: "order-by",
+        entry: {
+          column: column,
+          sort: this.order.sort === "asc" ? "desc" : "asc"
+        }
+      })
+    },
+
+    rotate(item: any) {
+      return (
+        this.order &&
+        this.order.sort === "asc" &&
+        this.order.column === item.name
+      )
+    }
+  }
+}
+</script>
+
+<template>
   <th>
     <div
       class="block flex items-center justify-between cursor-pointer px-3 py-2" 
@@ -22,30 +48,4 @@ const template = `
 
     <div class="block" v-else>{{ item.label }}</div>
   </th>
-`;
-
-export default {
-  props: ["columns", "order", "item"],
-
-  template,
-
-  methods: {
-    orderBy(column) {
-      this.$emit("action", {
-        event: "order-by",
-        entry: {
-          column: column,
-          sort: this.order.sort === "asc" ? "desc" : "asc"
-        }
-      });
-    },
-
-    rotate(item) {
-      return (
-        this.order &&
-        this.order.sort === "asc" &&
-        this.order.column === item.name
-      );
-    }
-  }
-};
+</template>
