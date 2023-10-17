@@ -2,6 +2,7 @@
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -14,6 +15,21 @@ export default defineConfig({
       '@pages': new URL('./src/pages', import.meta.url).pathname,
       '@router': new URL('./src/router', import.meta.url).pathname,
     }
+  },
+  build: {
+    lib: {
+      entry: resolve('./src', 'mazejs.ts'),
+      name: 'Mazejs',
+      fileName: 'mazejs',
+    },
+    rollupOptions: {
+      external: ['vue'],
+      output: {
+        globals: {
+          vue: 'Vue',
+        },
+      },
+    },
   },
   test: {
     globals: true,

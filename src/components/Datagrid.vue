@@ -1,82 +1,40 @@
-<script lang="ts">
+<script setup lang="ts">
 import GridControl from "./Control.vue"
 import GridField from "./Field.vue"
 import GridHeader from "./Header.vue"
 import Pagination from "./Pagination.vue"
 
-export default {
-  props: {
-    entries: {type: Array, default: () => []},
-    columns: {type: Array, default: () => []},
-    order: {type: Object, default: () => {}},
-    search: {type: Object, default: () => {
-      return {
-        value: "",
-        type: "",
-        types: []
-      }
-    }},
-    controls: {type: Boolean, default: () => false},
-    actions: {type: Array, default: () => []},
-    meta: {type: Object, default: () => {}}
-  },
+defineProps({
+  tableName: {type: String, default: 'Table name'},
+  entries: { type: Object, default: [] },
+  columns: { type: Object, default: [] },
+  order: { type: Object, default: [] },
+  controls: {},
+  actions: { type: Array, default: [] },
+  meta: { type: Object, default: [] },
+})
 
-  components: {
-    GridControl,
-    GridField,
-    GridHeader,
-    Pagination
-  },
+const emit = defineEmits(['action'])
 
-  methods: {
-    action(data: any) {
-      if (data instanceof Object) {
-        this.$emit(data.event, data.entry)
-      }
-    },
-
-    searching() {
-      this.$emit("searching", this.search)
-    }
+const action = (data: any): void => {
+  if (data instanceof Object) {
+    emit('action', { event: data.event, entry: data.entry })
   }
 }
+
 </script>
 
 <template>
   <div class="flex flex-col w-full">
     <div class="shadow rounded-lg bg-white">
-      <header class="flex flex-row md:flex-row-reverse items-center justify-between rounded-t-lg shadow-x bg-green-500 text-white px-3 py-2">
-        <form class="flex">
-          <div class="relative mr-2" v-if="search.types.length">
-            <select
-              class="appearance-none rounded cursor-pointer border border-gray-300 py-1 px-3 pr-8 leading-tight text-gray-700 bg-gray-100 focus:outline-none focus:bg-white focus:border-gray-600"
-              v-model="search.type"
-            >
-              <option v-for="item in search.types" :value="item.name" :key="item.name">{{ item.label }}</option>
-            </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-            </div>
-          </div>
-          <div class="">
-            <input
-              type="text"
-              class="shadow appearance-none leading-tight border border-gray-300 rounded bg-gray-100 text-gray-700 px-3 py-1 focus:outline-none focus:bg-white focus:border-gray-600"
-              placeholder="Search"
-              v-model="search.value"
-            />
-            <button
-              class="no-underline px-1 text-white focus:outline-none hover:text-black"
-              @click.prevent="searching()"
-            >Search</button>
-          </div>
-        </form>
+      <header class="flex flex-row items-center justify-between rounded-t-lg shadow-x bg-green-500 text-white px-3 py-2">
+        {{ tableName }}
       </header>
 
       <div class="block overflow-auto">
         <table class="table-auto w-full whitespace-no-wrap">
           <thead>
-            <tr class="table-row border-b shadow-x">
+            <tr class="flex justify-between border-b shadow-x">
               <grid-header
                 :key="item.label"
                 :item="item"

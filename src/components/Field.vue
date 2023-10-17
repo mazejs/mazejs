@@ -1,57 +1,48 @@
-<script lang="ts">
+<script setup lang="ts">
 import moment from 'moment'
 
-export default {
-  props: ["entry", "column"],
+const props = defineProps(["entry", "column"])
 
-  methods: {
-    nestedColumn(element: any, column: any) {
-      if (!column.name.includes(".")) {
-        return this.format(element, column)
-      }
-
-      if (!element[column.name.split(".")[0]]) {
-        return null
-      }
-
-      return this.format(element = column.name.split(".").reduce((item: any, index: number) => item[index], element), column)
-    },
-
-    isObject(element: any, column: any) {
-      return typeof element === "object" && element ? element[column.name] : element
-    },
-
-    format(element: any, column: any) {
-      if (
-        column.format
-        && ["float", "money", "date", "datetime"].includes(column.format)
-      ) {
-        return this[`${column.format}Field`](element, column)  
-      }
-
-      return this.isObject(element, column)
-    },
-
-    dataFormat(data: any, format: string) {
-      return data ? moment(data).format(format) : null
-    },
-
-    dateField(element: any, column: any) {
-      return this.dataFormat(this.isObject(element, column), "YYYY-MM-DD")
-    },
-
-    datetimeField(element: any, column: any) {
-      return this.dataFormat(this.isObject(element, column), "YYYY-MM-DD hh:mm:ss a")
-    },
-
-    moneyField(element: any, column: any) {
-      return `$ ${parseFloat(this.isObject(element, column)).toFixed(column.precision || 2)}`
-    },
-
-    floatField(element: any, column: any) {
-      return parseFloat(this.isObject(element, column)).toFixed(column.precision || 2)
-    }
+const nestedColumn = (element: any, column: any) => {
+  if (!column.name.includes(".")) {
+    return format(element, column)
   }
+
+  if (!element[column.name.split(".")[0]]) {
+    return null
+  }
+
+  return format(element = column.name.split(".").reduce((item: any, index: number) => item[index], element), column)
+}
+
+const isObject = (element: any, column: any) => {
+  return typeof element === "object" && element ? element[column.name] : element
+}
+
+const format = (element: any, column: any) => {
+  if (
+    props.column.format
+    && ["float", "money", "date", "datetime"].includes(props.column.format)
+  ) {
+    return methods(column.format, element, column)
+  }
+
+  return isObject(element, column)
+}
+
+const dataFormat = (data: any, format: string) => {
+  return data ? moment(data).format(format) : null
+}
+
+const fields = [
+  { name: 'date', field: (element: any, column: any) => dataFormat(isObject(element, column), "YYYY-MM-DD") },
+  { name: 'datetime', field: (element: any, column: any) => dataFormat(isObject(element, column), "YYYY-MM-DD hh:mm:ss a") },
+  { name: 'money', field: (element: any, column: any) => `$ ${parseFloat(isObject(element, column)).toFixed(column.precision || 2)}` },
+  { name: 'float', field: (element: any, column: any) => parseFloat(isObject(element, column)).toFixed(column.precision || 2) }
+]
+
+const methods = (method: string, element: any, column: any) => {
+  return fields.find((element) => element.name === method)?.field(element, column)
 }
 </script>
 

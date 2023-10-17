@@ -1,117 +1,116 @@
-<script lang="ts">
-export default {
-  props: ["meta"],
+<script setup lang="ts">
+import { computed, reactive, toRefs, watch } from 'vue'
 
-  data() {
-    return {
-      currentPage: 1,
-      offset: 2,
-      per_page: 10,
-      options: [5, 10, 15, 25, 50],
-      label: {
-        first: "First",
-        previous: "Previous",
-        next: "Next",
-        last: "Last"
-      }
-    }
-  },
+interface ILabel {
+  first: string
+  previous: string
+  next: string
+  last: string
+}
 
-  watch: {
-    meta(meta) {
-      this.currentPage = meta ? meta.current_page : 1
-      this.per_page = meta ? meta.per_page : 10
-    },
+interface IPagination {
+  currentPage: number
+  offset: number
+  per_page: number
+  options: number[]
+  label: ILabel
+}
 
-    currentPage(value) {
-      this.$emit("action", {
-        event: "paginate",
-        entry: value
-      })
-    },
+const props = defineProps(['meta'])
+const emit = defineEmits(['action'])
 
-    per_page(value) {
-      this.$emit("action", {
-        event: "per-page",
-        entry: value
-      })
-    }
-  },
+const state: IPagination = reactive({
+  currentPage: 1,
+  offset: 2,
+  per_page: 10,
+  options: [5, 10, 15, 25, 50],
+  label: {
+    first: "First",
+    previous: "Previous",
+    next: "Next",
+    last: "Last"
+  }
+})
 
-  computed: {
-    pages() {
-      return [...Array(this.lastPage()).keys()]
-        .map(index => ++index)
-        .reduce((pages: any, page) => {
-          if (
-            page - this.offset <= this.currentPage &&
-            page + this.offset >= this.currentPage
-          ) {
-            return [...pages, page]
-          }
-          return pages
-        }, [])
-    },
+watch(() => state.per_page, (value) => {
+  emit('action', { event: 'perPage', entry: value })
+}, { deep: true })
 
-    displayMeta() {
-      return this.meta
-        ? `
-          Showing
-          ${this.meta.from || 0} to
-          ${this.meta.to || 0} of
-          ${this.meta.total || 0} entries
-        `
-        : ""
-    }
-  },
+watch(() => state.currentPage, (value) => {
+  emit('action', { event: 'paginate', entry: value })
+}, { deep: true })
 
-  methods: {
-    lastPage() {
-      return this.meta ? this.meta.last_page : 1
-    },
+const lastPage = (): number => {
+  return props.meta ? props.meta.last_page : 1
+}
 
-    changePage(page: any) {
-      if (this.meta && page <= this.meta.last_page) {
-        this.currentPage = page
-      }
-    },
-
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--
-      }
-    },
-
-    nextPage() {
-      if (this.currentPage < this.lastPage()) {
-        this.currentPage++
-      }
-    },
-
-    prevClass() {
-      return this.setClass(this.currentPage > 1)
-    },
-
-    nextClass() {
-      return this.setClass(this.currentPage !== this.lastPage())
-    },
-
-    currentClass(page: any) {
-      return this.setClass(this.currentPage === page)
-    },
-
-    edgeClass(page: any) {
-      return this.setClass(this.currentPage !== page)
-    },
-
-    setClass(active: any) {
-      return {
-        "bg-green-500 text-white hover:bg-green-400": active,
-        "bg-gray-400 text-gray-500 hover:bg-gray-500 hover:text-white": !active
-      }
-    }
+const changePage = (page: any): void => {
+  if (props.meta && page <= props.meta.last_page) {
+    state.currentPage = page
   }
 }
+
+const prevPage = (): void => {
+  if (state.currentPage > 1) {
+    state.currentPage--
+  }
+}
+
+const nextPage = (): void => {
+  if (state.currentPage < lastPage()) {
+    state.currentPage++
+  }
+}
+
+const prevClass = (): Object => {
+  return setClass(state.currentPage > 1)
+}
+
+const nextClass = (): Object => {
+  return setClass(state.currentPage !== lastPage())
+}
+
+const currentClass = (page: any): Object => {
+  return setClass(state.currentPage === page)
+}
+
+const edgeClass = (page: any): Object => {
+  return setClass(state.currentPage !== page)
+}
+
+const setClass = (active: boolean): Object => {
+  return {
+    "bg-green-500 text-white hover:bg-green-400": active,
+    "bg-gray-400 text-gray-500 hover:bg-gray-500 hover:text-white": !active
+  }
+}
+
+const pages = computed(() => {
+  return [...Array(lastPage()).keys()]
+    .map(index => ++index)
+    .reduce((pages: any, page) => {
+      if (
+        page - state.offset <= state.currentPage &&
+        page + state.offset >= state.currentPage
+      ) {
+        return [...pages, page]
+      }
+      return pages
+    }, [])
+})
+
+const displayMeta = computed(() => {
+  return props.meta
+    ? `
+      Showing
+      ${props.meta.from || 0} to
+      ${props.meta.to || 0} of
+      ${props.meta.total || 0} entries
+    `
+    : ""
+})
+
+const { label, per_page, options } = toRefs(state)
 </script>
 
 <template>
@@ -123,7 +122,7 @@ export default {
             class="appearance-none rounded cursor-pointer border-2 border-gray-300 py-1 px-3 pr-8 leading-tight text-gray-700 bg-gray-100 focus:outline-none focus:bg-white focus:border-green-500"
             v-model="per_page"
           >
-            <option v-for="item in options" :value="item" :key="item">{{ item }}</option>
+            <option v-for="(item, index) in options" :value="item" :key="`page-option-${index}`">{{ item }}</option>
           </select>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">

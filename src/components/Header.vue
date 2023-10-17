@@ -1,33 +1,31 @@
-<script lang="ts">
-export default {
-  props: ["columns", "order", "item"],
+<script setup lang="ts">
+const props = defineProps(['columns', 'order', 'item'])
 
-  methods: {
-    orderBy(column: any) {
-      this.$emit("action", {
-        event: "order-by",
-        entry: {
-          column: column,
-          sort: this.order.sort === "asc" ? "desc" : "asc"
-        }
-      })
-    },
+const emit = defineEmits(['action'])
 
-    rotate(item: any) {
-      return (
-        this.order &&
-        this.order.sort === "asc" &&
-        this.order.column === item.name
-      )
+const orderBy = (column: any) => {
+  emit('action', {
+    event: 'order-by',
+    entry: {
+      column: column,
+      sort: props.order.sort === 'asc' ? 'desc' : 'asc'
     }
-  }
+  })
+}
+
+const rotate = (item: any) => {
+  return (
+    props.order &&
+    props.order.sort === 'asc' &&
+    props.order.column === item.name
+  )
 }
 </script>
 
 <template>
   <th>
     <div
-      class="block flex items-center justify-between cursor-pointer px-3 py-2" 
+      class="flex items-start justify-between cursor-pointer px-3 py-2" 
       v-if="order && item.sortable"
       @click.prevent="orderBy(item.name)"
     >
@@ -46,6 +44,6 @@ export default {
       </span>
     </div>
 
-    <div class="block" v-else>{{ item.label }}</div>
+    <div class="block px-3 py-2" v-else>{{ item.label }}</div>
   </th>
 </template>
