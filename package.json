@@ -1,6 +1,6 @@
 {
   "name": "@mazejs/mazejs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A wrapper of vue components and tailwindcss",
   "type": "module",
   "private": false,
@@ -19,7 +19,9 @@
   "bugs": {
     "url": "https://github.com/mazejs/mazejs/issues"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/mazejs.umd.cjs",
   "module": "./dist/mazejs.js",
   "exports": {
