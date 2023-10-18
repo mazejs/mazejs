@@ -1,23 +1,19 @@
 # Mazejs
 
-A wrapper of vuejs components and tailwindcss
+A wrapper of vuejs components using tailwind css.
 
-## How to install
-
+How to install.
 ```bash
 npm i @mazejs/mazejs
 ```
 
 ## Components
 
-* breadcrumb
+* control
 * datagrid
-* dropdown
-* modal
-* navbar
-* notification
+* field
+* header
 * pagination
-* sidebar
 
 ## Example
 [Laravel](https://github.com/mazejs/example)
